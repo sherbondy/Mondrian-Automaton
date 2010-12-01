@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<link href="http://fonts.googleapis.com/css?family=Arvo&subset=latin" 
+	    rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="style.css" type="text/css">
+	<link rel="icon" type="img/png" href="favicon.png">
+    <script src="processing-1.0.0.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" 
+        type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        
+        function make_pic() {
+            var canvy = document.getElementById("canvy");
+            document.location = canvy.toDataURL();
+        }
+    
+        $(function() {
+            $("#i").click(function() {
+                $("#info").toggle();
+                $("header").toggleClass("opaque");
+                return false;
+            });
+            $("#x").click(function() {
+                $("#info").hide();
+                $("header").removeClass("opaque");
+                return false;
+            });
+        
+            $("#dl").click(make_pic, false);
+        
+            $(document).keydown(function(e) {
+                if (e.keyCode == 32) {
+                    make_pic();
+                }
+            });
+        });
+    </script>
+    
+	<title>Mondrian</title>
+</head>
+<body>
+    <header>
+        <h1>Mondrian Automaton</h1>
+        <a href="#info" id="i">Info</a>
+        <a href="#download" id="dl">Download</a>
+    </header>
+    
+    <details id="info">
+        <p>An experiment in websites as art for 
+            <a href="http://courses.media.mit.edu/2010fall/mas110/">MAS.110</a>.
+        </p>
+        <p>
+            Mondrian-style images are generated with a little 
+            help from <a href="http://processingjs.org/">processing.js</a>.
+        </p>
+        
+        <p>
+            Icons from <a href="http://glyphish.com/">Glyphish</a>.
+            The typefaces are Distill and Arvo.
+        </p>
+        <p>
+            Created by <a href="http://www.tooepic.com">Ethan Sherbondy</a>.
+        </p>
+        <a id="x" href="#">X</a>
+    </details>
+    
+    <canvas data-processing-sources="mondrian.pde" id="canvy"></canvas>
+</body>
+</html>
