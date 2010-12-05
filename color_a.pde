@@ -35,12 +35,12 @@ void illus() {
     int max_s_h = int(w/15);
     
     int[] big_rects = new int[3];
-    big_rects[0] = int(random(6, 12));
-    big_rects[1] = int(random(6, 12));
-    big_rects[2] = int(random(6, 12));
+    big_rects[0] = int(random(6, 10));
+    big_rects[1] = int(random(6, 10));
+    big_rects[2] = int(random(6, 10));
     int small_rects = int(random(20, 30));
     
-    for (int i=0; i<big_rects.length; i++)
+    for (int i=0; i<big_rects.length; i++) {
         for (int j=0; j < big_rects[i]; j++) {
             int width = int(random(min_w,max_w));
             int height = int(random(min_w,max_w));
