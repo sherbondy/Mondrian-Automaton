@@ -1,6 +1,3 @@
-ArrayList v_array = new ArrayList();
-ArrayList h_array = new ArrayList();
-
 ArrayList colors = new ArrayList();
 colors.add(color(148, 87, 30)); // orange
 colors.add(color(156, 70, 69)); // pink
@@ -12,16 +9,7 @@ void illus() {
     var w = 480;
     var h = 480;
     size(w, h);
-    
-    v_array.clear();
-    h_array.clear();
-    
-    v_array.add(w);
-    h_array.add(h);
-    
-    v_array.add(0);
-    h_array.add(0);
-    
+        
     background(245,245,245);
     smooth();
     
@@ -60,7 +48,6 @@ void illus() {
                 
                 int s_h = int(random(min_s_h, max_s_h));
                 int o = int(random(2));
-                console.log(o);
                 
                 fill(black);
                 
@@ -78,8 +65,6 @@ void illus() {
     for (int i=0; i<small_rects; i++) {
         int height = int(random(min_s_h,max_s_h));
         int orientation = int(random(0,1));
-        
-        
     }
 }
 
