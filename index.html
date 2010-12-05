@@ -11,11 +11,6 @@
         type="text/javascript"></script>
     
     <script type="text/javascript">
-        
-        function make_pic() {
-            var canvy = document.getElementById("canvy");
-            document.location = canvy.toDataURL();
-        }
     
         $(function() {
             $("#i").click(function() {
@@ -29,12 +24,9 @@
                 return false;
             });
         
-            $("#dl").click(make_pic, false);
-        
-            $(document).keydown(function(e) {
-                if (e.keyCode == 32) {
-                    make_pic();
-                }
+            $("#canvy_1, #canvy_2").click(function() {
+                document.location = this.toDataURL();
+                return false;
             });
         });
     </script>
@@ -43,9 +35,9 @@
 </head>
 <body>
     <header>
-        <h1>Mondrian Automaton</h1>
+        <h1><a href="/">Mondrian Automaton</a></h1>
         <a href="#info" id="i">Info</a>
-        <a href="#download" id="dl">Download</a>
+        <a href="gallery" id="gal">Gallery</a>
     </header>
     
     <details id="info">
@@ -70,6 +62,10 @@
         <a id="x" href="#">X</a>
     </details>
     
-    <canvas data-processing-sources="color_a.pde" id="canvy"></canvas>
+    <div id="content">
+        <h2>Choose the images you prefer, and we&rsquo;ll hone in on your tastes.</h2>
+        <canvas data-processing-sources="color_a.pde" id="canvy_1"></canvas>
+        <canvas data-processing-sources="composition.pde" id="canvy_2"></canvas>
+    </div>
 </body>
 </html>

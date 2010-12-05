@@ -13,8 +13,8 @@ colors.add(color(187, 189, 194)); // grey
 colors.add(color(255,255,255)); // white
 
 void illus() {
-    var w = $(window).width()-8;
-    var h = $(window).height()-8;
+    var w = 480;
+    var h = 480;
     size(w, h);
     
     v_array.clear();
@@ -30,7 +30,7 @@ void illus() {
     smooth();
 
     stroke(000);
-    int s_w = int(random(8,16));
+    int s_w = int(random(int(w/100),int(w/50)));
     int adj = ceil(s_w/2);
     strokeWeight(s_w);
     
