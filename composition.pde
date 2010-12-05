@@ -97,9 +97,4 @@ void illus() {
 
 void setup() {
     illus();
-    frameRate(0.5);
-}
-
-void draw() {    
-    illus();
 }
