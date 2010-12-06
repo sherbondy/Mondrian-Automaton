@@ -6,13 +6,27 @@
 	    rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<link rel="icon" type="img/png" href="favicon.png">
-    <script src="processing-1.0.0.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" 
         type="text/javascript"></script>
     
     <script type="text/javascript">
+		// Array Remove - By John Resig (MIT Licensed)
+		Array.prototype.remove = function(from, to) {
+		  var rest = this.slice((to || from) + 1 || this.length);
+		  this.length = from < 0 ? this.length + from : from;
+		  return this.push.apply(this, rest);
+		};
+		
+		var options = ["boogie","color_a","composition"];
     
         $(function() {
+			$("canvas").each(function() {
+				var i = Math.floor(Math.random()*options.length);
+				var selection = options[i];
+				$(this).attr("data-processing-sources", selection+".pde");
+				options.remove(i);
+			});
+			
             $("#i").click(function() {
                 $("#info").toggle();
                 $("header").toggleClass("opaque");
@@ -24,12 +38,14 @@
                 return false;
             });
         
-            $("#canvy_1, #canvy_2").click(function() {
+            $("canvas").click(function() {
                 document.location = this.toDataURL();
                 return false;
             });
         });
     </script>
+
+	<script src="processing-1.0.0.min.js" type="text/javascript"></script>
     
 	<title>Mondrian</title>
 </head>
@@ -64,8 +80,8 @@
     
     <div id="content">
         <h2>Choose the images you prefer, and we&rsquo;ll hone in on your tastes.</h2>
-        <canvas data-processing-sources="color_a.pde" id="canvy_1"></canvas>
-        <canvas data-processing-sources="boogie.pde" id="canvy_2"></canvas>
+        <canvas id="c1"></canvas>
+        <canvas id="c2"></canvas>
     </div>
 </body>
 </html>

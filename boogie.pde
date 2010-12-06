@@ -2,10 +2,9 @@ ArrayList v_array = new ArrayList();
 ArrayList h_array = new ArrayList();
 
 ArrayList colors = new ArrayList();
-colors.add(color(11, 17, 77)); // blue
+colors.add(color(11, 16, 74)); // blue
 colors.add(color(165, 164, 169)); // grey
 colors.add(color(195, 35, 33)); // red
-colors.add(color(28,24,160)); // blue
 colors.add(color(213, 174, 49)); // yellow
 
 color bkgd = color(202, 204, 201);
@@ -68,11 +67,85 @@ void illus() {
     for (int i = 1; i < h_array.size(); i++) {
         int square_pos = 0;
         
-        while (square_pos < w) {
+        while (square_pos < h) {
             fill(colors.get(int(random(0,colors.size()))));
             rect(square_pos-s_w/2, h_array.get(i)-s_w/2, s_w, s_w);
             
             square_pos += int(random(1,5))*s_w;
+        }
+    }
+    
+    for (int i = 1; i < v_array.size(); i++) {
+        for (int j = 1; j < h_array.size(); j++) {
+            int squarify = int(random(0,4));
+            
+            if (squarify == 0) {
+                fill(colors.get(int(random(0,colors.size()))));
+                
+                int left_shift = s_w/2;
+                int top_shift = s_w/2;
+                
+                // box is wider than it is tall, so we want to have a hotdog rect inside
+                
+                if (v_array.get(i+1)-v_array.get(i) > h_array.get(j+1)-h_array.get(j)) {
+                    int max_s = int((v_array.get(i+1)-v_array.get(i))/s_w);
+                    int max_si = max_s;
+                    
+                    if (max_s > 6) {
+                        // don't want ridiculously wide boxes
+                        max_s = int(max_s/2);
+                    }
+                    int num_squares = int(random(2,max_s));
+                    int free_s = max_si - num_squares;
+                    int height = h_array.get(j+1)-h_array.get(j)-s_w;
+                    left_shift += int(random(0,free_s))*s_w;
+                    
+                    rect(v_array.get(i)+left_shift, h_array.get(j)+top_shift, 
+                        num_squares*s_w, 
+                        h_array.get(j+1)-h_array.get(j)-s_w);
+                    
+                    if (num_squares > 2) {
+                        int sub_w_sq = int(random(1,num_squares));
+                        int left_more = int(random(0, num_squares - sub_w_sq))*s_w;
+                        int sub_h_sq = int(random(1,int(height/16)));
+                        int top_more = int(random(0, int(height/16)-sub_h_sq))*s_w;
+
+                        fill(colors.get(int(random(0,colors.size()))));
+
+                        rect(v_array.get(i)+left_shift+left_more, h_array.get(j)+top_shift+top_more, 
+                            sub_w_sq*s_w, sub_h_sq*s_w);
+                    }
+                } else {
+                    // box is taller than it is wide, so we want a hamburger rect inside
+                    
+                    int max_s = int((h_array.get(i+1)-h_array.get(i))/s_w);
+                    int max_si = max_s;
+                    
+                    if (max_s > 5) {
+                        // don't want ridiculously wide boxes
+                        max_s = int(max_s/2);
+                    }
+                    int num_squares = int(random(2,max_s));
+                    int free_s = max_si - num_squares;
+                    int width = v_array.get(i+1)-v_array.get(i)-s_w;
+                    top_shift += int(random(0,free_s))*s_w;
+                    
+                    rect(v_array.get(i)+left_shift, h_array.get(j)+top_shift, 
+                        width, num_squares*s_w);
+                    
+                    if (num_squares > 2) {
+                        int sub_h_sq = int(random(1,num_squares));
+                        int top_more = int(random(0, num_squares - sub_h_sq))*s_w;
+                        int sub_w_sq = int(random(1,int(width/16)));
+                        int left_more = int(random(0, int(width/16)-sub_w_sq))*s_w;
+                        
+                        fill(colors.get(int(random(0,colors.size()))));
+                        
+                        rect(v_array.get(i)+left_shift+left_more, h_array.get(j)+top_shift+top_more, 
+                            sub_w_sq*s_w, sub_h_sq*s_w);
+                    }
+                }
+            }
         }
     }
 }
