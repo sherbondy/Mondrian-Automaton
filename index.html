@@ -22,11 +22,14 @@
 		var options = ["boogie","color_a","composition"];
     
         $(function() {
+			
+			
 			$("canvas").each(function() {
 				var i = Math.floor(Math.random()*options.length);
 				var selection = options[i];
 				var my_id = $(this).attr("id");
 				$.get(selection+".pde", function(code) {
+					$("#"+my_id).data("selection", selection);
 					var canvas = document.getElementById(my_id);
 					new Processing(canvas, code);
 				});
@@ -45,7 +48,7 @@
             });
         
             $("canvas").click(function() {
-                document.location = this.toDataURL();
+                //document.location = this.toDataURL();
                 return false;
             });
         });
