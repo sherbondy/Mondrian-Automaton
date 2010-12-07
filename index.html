@@ -25,7 +25,7 @@
 			// $("canvas").css("-webkit-transform", "rotate(45deg) scale(0.6)");
 			
 			// ranges for width height tweaking [320,480], [240,480], [480,480]
-			$(document).data("width", 480);
+			$(document).data("width", 240);
 			$(document).data("height", 240);
 			
 			$("canvas").each(function() {
@@ -91,9 +91,29 @@
     </details>
     
     <div id="content">
-        <h2>Choose the images you prefer, and we&rsquo;ll hone in on your tastes.</h2>
-        <canvas id="c1"></canvas>
-        <canvas id="c2"></canvas>
+        <h2>Choose the image you prefer, and we&rsquo;ll hone in on your tastes.</h2>
+            
+        <ol id="images">
+            <li>
+                <canvas id="c1"></canvas>
+                <a href="#c1">Add to gallery</a>
+            </li>
+        
+            <li>
+                <canvas id="c2"></canvas>
+                <a href="#c2">Add to gallery</a>
+            </li>
+            
+            <li>
+                <canvas id="c3"></canvas>
+                <a href="#c3">Add to gallery</a>
+            </li>
+        
+            <li>
+                <canvas id="c4"></canvas>
+                <a href="#c4">Add to gallery</a>
+            </li>
+        </ol>
     </div>
 </body>
 </html>
