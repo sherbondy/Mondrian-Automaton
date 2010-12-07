@@ -1,14 +1,21 @@
-ArrayList colors = new ArrayList();
-
-// adding color options to the colors array
-colors.add(color(175,25,25)); // red
-colors.add(color(28,24,160)); // blue
-colors.add(color(240,204,22)); // yellow
-colors.add(color(240,204,22)); // yellow
-colors.add(color(240,204,22)); // yellow
-
 void illus()
 {
+
+  ArrayList colors = new ArrayList();
+
+  // add reds
+  for (int i = 0; i < int(random(0, 4)); i++) {
+    colors.add(color(175,25,25));
+  }
+    // add blues
+  for (int i = 0; i < int(random(0, 4)); i++) {
+    colors.add(color(28,24,160));
+  }
+    // add yellows
+  for (int i = 0; i < int(random(0, 4)); i++) {
+    colors.add(color(240,204,22));
+  }
+
   var screen_width = $(document).data("width");
   var screen_height = $(document).data("height");
   int stroke_weight = int(random(0, 20));  
@@ -43,11 +50,6 @@ void illus()
     location = location + stroke_weight + int(random(min_spacing, max_spacing));
     if (location < (height - stroke_weight - min_spacing)) {
       int[] coords = {0, location, width, location};
-      /*ArrayList coords = new ArrayList();
-      coords.add(0);
-      coords.add(location);
-      coords.add(width);
-      coords.add(location);*/
       line_locations.add(coords);
       lines++;
     }
@@ -63,11 +65,6 @@ void illus()
     location = location + stroke_weight + int(random(min_spacing, max_spacing));
     if (location < (width - stroke_weight - min_spacing)) {
       int[] coords = {location, 0, location, height};
-      /*ArrayList coords = new ArrayList();
-      coords.add(location);
-      coords.add(0);
-      coords.add(location);
-      coords.add(height);*/
       line_locations.add(coords);
       lines++;
     }
@@ -83,13 +80,6 @@ void illus()
     line(coords[0], coords[1], coords[2], coords[3]);
     line_locations.remove(choice);
   }
-
-/*
-  for(int i; i < line_locations.size(); i++) {
-    int[] coords = line_locations.get(i);
-    stroke(colors.get(int(random(colors.size()))));
-    line(coords[0], coords[1], coords[2], coords[3]);
-  } */
 }
 
 void draw(){
