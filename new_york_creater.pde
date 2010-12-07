@@ -9,13 +9,13 @@ colors.add(color(240,204,22)); // yellow
 
 void illus()
 {
-  var screen_width = 600;
-  var screen_height = 400;
+  var screen_width = $(document).data("width");
+  var screen_height = $(document).data("height");
   int stroke_weight = int(random(0, 20));  
   ArrayList line_locations = new ArrayList();
   int horizontal_lines = 20;
   int vertical_lines = 20;
-  int background_shade = 125;
+  int background_shade = color(237, 235, 210);
   // the min and max spacing includes spacing between the walls.
   // we may want to provide two more variables to control this particular case later
   int min_spacing = 5;

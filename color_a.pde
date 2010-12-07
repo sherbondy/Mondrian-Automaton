@@ -6,10 +6,10 @@ colors.add(color(96, 90, 126)); // purple
 color black = color(44, 26, 12);
 
 void illus() {
-    var w = 480;
-    var h = 480;
+    var w = $(document).data("width");
+    var h = $(document).data("height");
     size(w, h);
-        
+            
     background(245,245,245);
     smooth();
     

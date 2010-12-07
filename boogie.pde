@@ -11,8 +11,8 @@ color bkgd = color(202, 204, 201);
 color yellow = color(213, 174, 49);
 
 void illus() {
-    var w = 480;
-    var h = 480;
+    var w = $(document).data("width");
+    var h = $(document).data("height");
     size(w, h);
     
     v_array.clear();

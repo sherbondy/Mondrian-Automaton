@@ -22,9 +22,14 @@
 		var options = ["boogie","color_a","composition", "new_york_creater"];
     
         $(function() {
+			// $("canvas").css("-webkit-transform", "rotate(45deg) scale(0.6)");
 			
+			// ranges for width height tweaking [320,480], [240,480], [480,480]
+			$(document).data("width", 480);
+			$(document).data("height", 240);
 			
 			$("canvas").each(function() {
+				
 				var i = Math.floor(Math.random()*options.length);
 				var selection = options[i];
 				var my_id = $(this).attr("id");
