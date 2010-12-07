@@ -25,8 +25,8 @@
 			// $("canvas").css("-webkit-transform", "rotate(45deg) scale(0.6)");
 			
 			// ranges for width height tweaking [320,480], [240,480], [480,480]
-			$(document).data("width", 240);
-			$(document).data("height", 240);
+			$(document).data("width", 480);
+			$(document).data("height", 480);
 			
 			$("canvas").each(function() {
 				
@@ -56,12 +56,33 @@
                 //document.location = this.toDataURL();
                 return false;
             });
+            
+            $("#images a").click(function() {
+                var canvy = document.getElementById($(this).attr("href").slice(1));
+                $("#upload img").attr("src", canvy.toDataURL());
+                $("#upload").show();
+                return false;
+            });
+            
+            $("#cancel").click(function() {
+                $("#upload").hide();
+            });
         });
     </script>
     
 	<title>Mondrian</title>
 </head>
 <body>
+    <div id="upload">
+        <form action="/submit">
+            <h2>Add to the Gallery</h2>
+            <input type="text" name="image_name" id="image_name" placeholder="Give it a name">
+            <img src="#">
+            <input type="submit" id="submit" value="Submit">
+            <input type="button" id="cancel" value="Cancel">
+        </form>
+    </div>
+    
     <header>
         <h1><a href="/">Mondrian Automaton</a></h1>
         <a href="#info" id="i">Info</a>

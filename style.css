@@ -56,6 +56,7 @@ blockquote, q {
 
 * {
     -webkit-transition: opacity 0.5s linear;
+    -webkit-transition: -webkit-box-shadow 0.2s linear;
 }
 
 @font-face {
@@ -175,7 +176,7 @@ h2 {
     font-weight: bold;
     font-size: 24px;
     line-height: 2;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
 }
 canvas {
 	display: block;
@@ -183,19 +184,20 @@ canvas {
 }
 canvas, #images li a {
 	position: relative;
-    -webkit-transition: -webkit-box-shadow 0.2s linear;
 }
 canvas:hover, #images li a:hover {
     cursor: pointer;
     -webkit-box-shadow: 0px 0px 16px #00a5bf;
 }
-canvas:active, #images li a:active {
+canvas:active, #images li a:active, 
+#cancel:active, #submit:active {
     top: 2px;
 }
 
 #images {
 	overflow: hidden;
-    margin-bottom: 23px;
+	padding-top: 16px;
+    margin-bottom: 16px;
 }
 
 #images li {
@@ -216,4 +218,66 @@ canvas:active, #images li a:active {
     -webkit-border-radius: 16px;
     width: 240px;
     margin: 16px auto;
+}
+#upload {
+	z-index: 1;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	display: none;
+	background: rgba(0,0,0,0.75);
+}
+#upload form {
+	position: fixed;
+	z-index: 2;
+    width: 480px;
+    padding: 16px;
+    background: #f0f0f0;
+    left: 50%;
+    top: 0;
+    margin-left: -256px;
+}
+#upload img {
+    display: block;
+    margin: 0 auto 16px;
+}
+#upload input {
+	font-family: Arvo, 'Helvetica Neue', Helvetica;
+	color: #fff;
+}
+#upload input[type='text'] {
+    display: block;
+    width: 460px;
+    border: 2px solid #666;
+    font-size: 20px;
+    padding: 4px 8px;
+	margin-bottom: 8px;
+}
+#upload input[type='text']:focus {
+    border-color: #00a5bf;
+}
+
+#cancel {
+	position: relative;
+	border: none;
+	background: #af1919;
+	font-size: 16px;
+	padding: 4px 8px;
+	-webkit-border-radius: 8px;
+}
+#cancel:hover {
+	-webkit-box-shadow: 0px 0px 16px #af1919;   
+}
+#submit {
+	position: relative;
+	border: none;
+    background: #00a5bf;
+    font-size: 20px;
+    padding: 8px 16px;
+    -webkit-border-radius: 16px;
+    margin-right: 16px;
+    cursor: pointer;
+}
+#submit:hover {
+	-webkit-box-shadow: 0px 0px 16px #00a5bf;
 }
