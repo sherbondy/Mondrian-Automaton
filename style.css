@@ -151,15 +151,15 @@ details p {
 	line-height: 1.5;
     padding: 16px 16px 0;
 }
-details a {
+details a, h2 a {
     color: #1c18a0;
     position: relative;
     text-decoration: none;
 }
-details a:hover {
+details a:hover, h2 a:hover {
     color: #af1919;
 }
-details a:active {
+details a:active, h2 a:active {
     top: 1px;
 }
 details:target {
@@ -191,8 +191,7 @@ details:target {
 h2 {
     font-weight: bold;
     font-size: 24px;
-    line-height: 2;
-    margin-bottom: 16px;
+    line-height: 1.5;
 }
 canvas {
 	display: block;
@@ -204,6 +203,8 @@ canvas, #images li a {
 canvas:hover, #images li a:hover {
     cursor: pointer;
     -webkit-box-shadow: 0px 0px 16px #00a5bf;
+    -moz-box-shadow: 0px 0px 16px #00a5bf;
+    box-shadow: 0px 0px 16px #00a5bf;
 }
 canvas:active, #images li a:active, 
 #cancel:active, #submit:active {
@@ -236,6 +237,8 @@ canvas:active, #images li a:active,
     font-size: 18px;
     text-align: center;
     -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
     width: 240px;
     margin: 16px auto;
 }
@@ -286,6 +289,8 @@ canvas:active, #images li a:active,
 	color: #fff;
 	cursor: pointer;
     -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
 }
 #cancel {
 	float: right;
@@ -295,7 +300,9 @@ canvas:active, #images li a:active,
 	margin-top: 8px;
 }
 #cancel:hover {
-	-webkit-box-shadow: 0px 0px 16px #af1919;   
+	-webkit-box-shadow: 0px 0px 16px #af1919;
+	-moz-box-shadow: 0px 0px 16px #af1919;
+	box-shadow: 0px 0px 16px #af1919;
 }
 #submit {
     background: #00a5bf;
@@ -305,6 +312,8 @@ canvas:active, #images li a:active,
 }
 #submit:hover {
 	-webkit-box-shadow: 0px 0px 16px #00a5bf;
+	-moz-box-shadow: 0px 0px 16px #00a5bf;
+	box-shadow: 0px 0px 16px #00a5bf;
 }
 
 #errors {
@@ -325,4 +334,10 @@ canvas:active, #images li a:active,
 	font-size: 18px;
 	margin-top: 16px;
 	color: #00a5bf;
+}
+
+.rotate {
+	-webkit-transform: rotate(45deg) scale(0.65);
+	-moz-transform: rotate(45deg) scale(0.65);
+	transform: rotate(45deg) scale(0.65);
 }

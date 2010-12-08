@@ -20,16 +20,20 @@
 		};
 		
 		var hash = "";
-		var options = ["boogie","color_a","composition", "new_york_creater"];
-		var clicks = 0;
+		var style_options = ["boogie","color_a","composition", "new_york_creater"];
+		var rotate_options = [true, true, false, false];
+		var dimension_options = [[480,480], [480,240],[240,480],[480,320],[320,480]];
+		var options = [style_options, rotate_options, dimension_options];
 		
-		if (window.openDatabase) {
+		var clicks = 0;
+		var db_enabled = true; // toggling is helpful when using cssedit
+		
+		if (db_enabled && window.openDatabase) {
 			db = openDatabase('gallery', '1.0', 'Mondrian Automaton gallery', 10 * 1024 * 1024);
 			db.transaction(function(tx) {
-				tx.executeSql('CREATE TABLE IF NOT EXISTS images (id unique, title TEXT, src TEXT, clicks INT)');
+				tx.executeSql('CREATE TABLE IF NOT EXISTS images'
+							 +'(id unique, title TEXT, src TEXT, rotate BOOLEAN, clicks INT)');
 			});
-		} else {
-			console.log("Web Databases not supported.");
 		}
 		
 		function hash_change() {
@@ -48,22 +52,30 @@
     
         $(function() {
 			$("#gallery").bind("generate", function(e) {
-				$(this).children().remove();
-				db.transaction(function(tx) {
-					tx.executeSql('SELECT * FROM images', [], function(tx, results) {
-						if (results.rows && results.rows.length) {
-							$("#gallery").append("<ul/>");
-							for(i=results.rows.length-1; i>=0; i--) {
-								var li = '<li><span class="clicks">'+results.rows.item(i).clicks+' clicks</span>'
-										+'<h3>'+unescape(results.rows.item(i).title)+'</h3>'
-										+'<img src="'+unescape(results.rows.item(i).src)+'"></li>';
-								$("#gallery ul").append(li);
+				if (db) {
+					$(this).children().remove();
+					
+					db.transaction(function(tx) {
+						tx.executeSql('SELECT * FROM images', [], function(tx, results) {
+							if (results.rows && results.rows.length) {
+								$("#gallery").append("<ul/>");
+								for(i=results.rows.length-1; i>=0; i--) {
+									var li = '<li><span class="clicks">'+results.rows.item(i).clicks+' clicks</span>'
+											+'<h3>'+unescape(results.rows.item(i).title)+'</h3>'
+											+'<img src="'+unescape(results.rows.item(i).src)+'"';
+									if (results.rows.item(i).rotate == "true") {
+										li += ' class="rotate"';
+									}
+									li += '>';
+									
+									$("#gallery ul").append(li);
+								}
+							} else {
+								$("#gallery").append("<h2>Nothing in the Gallery yet.</h2>");
 							}
-						} else {
-							$("#gallery").append("<h2>Nothing in the gallery yet.</h2>");
-						}
+						});
 					});
-				});
+				}
 			});
 			
 			var hletters = $("h1 a").text().split("");
@@ -79,24 +91,33 @@
 			
 			colorify_title();
 			
-			// $("canvas").css("-webkit-transform", "rotate(45deg) scale(0.6)");
+			function generate_images(options) {
+				// ranges for width height tweaking [320,480], [240,480], [480,480]
+				// arbitrarily set these, find out which array we're talking about
+				// if options == style_options, etc. go down the line.
+				// for the rest, pick a random, but make it constant across
+				$(document).data("width", 480);
+				$(document).data("height", 480);
 			
-			// ranges for width height tweaking [320,480], [240,480], [480,480]
-			$(document).data("width", 480);
-			$(document).data("height", 480);
+				var opt_clone = options.slice(0);
 			
-			$("canvas").each(function() {
-				var i = Math.floor(Math.random()*options.length);
-				var selection = options[i];
-				var my_id = $(this).attr("id");
+				$("canvas").each(function() {
+					var i = Math.floor(Math.random()*opt_clone.length);
+					var selection = opt_clone[i];
+					var my_id = $(this).attr("id");
 				
-				$.get(selection+".pde", function(code) {
-					$("#"+my_id).data("selection", selection);
-					var canvas = document.getElementById(my_id);
-					new Processing(canvas, code);
+					$.get(selection+".pde", function(code) {
+						$("#"+my_id).data("selection", selection);
+						var canvas = document.getElementById(my_id);
+						new Processing(canvas, code);
+					});
+					$(this).data("type", selection);
+					opt_clone.remove(i);
 				});
-				options.remove(i);
-			});
+			}
+			
+			// initial generation
+			generate_images(style_options);
 			
             $("#i").click(function() {
                 $("#info").toggle();
@@ -117,6 +138,9 @@
             $("#images a").click(function() {
                 var source = document.getElementById($(this).attr("href").slice(1)).toDataURL();
                 $("#image_src").attr("src", source);
+				if ($($(this).attr("href")).hasClass("rotate")) {
+					$("#image_src").addClass("rotate");
+				}
                 $("#upload").show();
                 return false;
             });
@@ -139,25 +163,26 @@
 				
 				var the_title = escape($("#image_name").val().replace(/^\s+|\s+$/g, ''));
 				var the_src = escape($("#image_src").attr("src"));
+				var rotate = $("#image_src").hasClass("rotate") ? true : false;
 				
 				if (the_title.length) {
 					if (the_title.length < 64) {
 						var index = 0;
-						db.transaction(function(tx) {
-							tx.executeSql('SELECT * FROM images', [], function(tx, results) {
-								if (results.rows && results.rows.length) {
-									index = results.rows.length;
-								}
+						if (db) {
+							db.transaction(function(tx) {
+								tx.executeSql('SELECT * FROM images', [], function(tx, results) {
+									if (results.rows && results.rows.length) {
+										index = results.rows.length;
+									}
+								});
 							});
-						});
-						
-						console.log(index);
-						
-						db.transaction(function(tx) {
-							tx.executeSql('INSERT INTO images (id, title, src, clicks) '
-										 +'values (?, ?, ?, ?)',
-										[index, the_title, the_src, clicks]);
-						});
+												
+							db.transaction(function(tx) {
+								tx.executeSql('INSERT INTO images (id, title, src, rotate, clicks) '
+											 +'values (?, ?, ?, ?, ?)',
+											[index, the_title, the_src, rotate, clicks]);
+							});
+						}
 					
 						close_upload();
 						location.hash = "#gallery";
@@ -209,7 +234,7 @@
             The typefaces are Distill and Arvo.
         </p>
         <p>
-            Created by <a href="http://www.tooepic.com">Ethan Sherbondy</a>.
+            Created by <a href="http://www.tooepic.com">Ethan Sherbondy</a> and Turner Bohlen.
         </p>
         <p>
             Play with the source on <a href="https://github.com/sherbondy/Mondrian-Automaton">GitHub</a>.
@@ -220,6 +245,7 @@
 	<div id="main">
 	    <div id="content">
 	        <h2>Choose the image you prefer, and we&rsquo;ll hone in on your tastes.</h2>
+			<h2>If you love one, add it to <a href="#gallery">the Gallery</a>.</h2>
             
 	        <ol id="images">
 	            <li>
@@ -245,7 +271,7 @@
 	    </div>
 
 		<div id="gallery">
-		
+			<h2>The Gallery feature requires a browser that supports Web SQL.</h2>
 		</div>
 	</div>
 </body>
