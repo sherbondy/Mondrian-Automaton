@@ -1,4 +1,7 @@
-/* @override http://eps.local/~ethan/mondrian/style.css */
+/* @override 
+	http://eps.local/~ethan/mondrian/style.css
+	http://emac.local/~emac/mondrian/style.css
+*/
 
 /* @group Meyer's CSS Reset */
 
@@ -83,7 +86,24 @@ h1 a {
 	position: relative;
     text-decoration: none;
     color: #000;
-    opacity: 0.5;
+}
+.red {
+	color: rgb(175,25,25);
+}
+.blue {
+	color: rgb(28,24,160);
+}
+.yellow {
+	color: rgb(240,204,22);
+}
+.black {
+	color: rgb(18,13,10);
+}
+.grey {
+	color: rgb(187,189,194);
+}
+h1 a:hover span {
+	color: #000;
 }
 
 #gal, #i {
@@ -105,6 +125,9 @@ h1 a {
 	width: 28px;
     height: 28px;
     background: url('info.png') no-repeat;
+}
+#gal.current, #i.current {
+	opacity: 1;
 }
 h1 a:hover, #gal:hover, #i:hover {
     opacity: 1.0;
@@ -155,18 +178,11 @@ details:target {
     font-size: 32px;
     position: relative;
 }
-#x:hover {
-    opacity: 1;
-}
 #x:active {
     top: 1px;
 }
 
-.opaque {
-    opacity: 1;
-}
-
-#content {
+#content, #gallery {
     width: 996px;
     padding: 16px;
     margin: 16px auto;
@@ -194,16 +210,20 @@ canvas:active, #images li a:active,
     top: 2px;
 }
 
-#images {
+#main > div {
+	display: none;
+}
+
+#images, #gallery ul {
 	overflow: hidden;
 	padding-top: 16px;
     margin-bottom: 16px;
 }
 
-#images li {
+#images li, #gallery li {
 	width: 480px;
     float: left;
-    margin-right: 16px;
+    padding: 8px;
     margin-bottom: 16px;
 }
 #images li a {
@@ -243,9 +263,9 @@ canvas:active, #images li a:active,
 }
 #upload input {
 	font-family: Arvo, 'Helvetica Neue', Helvetica;
-	color: #fff;
 }
-#upload input[type='text'] {
+#image_name {
+	color: #000;
     display: block;
     width: 460px;
     border: 2px solid #666;
@@ -253,31 +273,56 @@ canvas:active, #images li a:active,
     padding: 4px 8px;
 	margin-bottom: 8px;
 }
-#upload input[type='text']:focus {
+#image_name.error {
+	border-color: #af1919;
+}
+#image_name:focus {
     border-color: #00a5bf;
 }
 
-#cancel {
+#cancel, #submit {
 	position: relative;
 	border: none;
+	color: #fff;
+	cursor: pointer;
+    -webkit-border-radius: 16px;
+}
+#cancel {
+	float: right;
 	background: #af1919;
 	font-size: 16px;
 	padding: 4px 8px;
-	-webkit-border-radius: 8px;
+	margin-top: 8px;
 }
 #cancel:hover {
 	-webkit-box-shadow: 0px 0px 16px #af1919;   
 }
 #submit {
-	position: relative;
-	border: none;
     background: #00a5bf;
     font-size: 20px;
     padding: 8px 16px;
-    -webkit-border-radius: 16px;
-    margin-right: 16px;
-    cursor: pointer;
+    margin-right: 32px;
 }
 #submit:hover {
 	-webkit-box-shadow: 0px 0px 16px #00a5bf;
+}
+
+#errors {
+	display: none;
+	background: #af1919;
+	padding: 8px 16px;
+	color: #fff;
+	margin-bottom: -2px;
+}
+
+#gallery h3 {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 2;
+}
+#gallery .clicks {
+	float: right;
+	font-size: 18px;
+	margin-top: 16px;
+	color: #00a5bf;
 }

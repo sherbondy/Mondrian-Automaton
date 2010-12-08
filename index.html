@@ -19,9 +19,66 @@
 		  return this.push.apply(this, rest);
 		};
 		
+		var hash = "";
 		var options = ["boogie","color_a","composition", "new_york_creater"];
+		var clicks = 0;
+		
+		if (window.openDatabase) {
+			db = openDatabase('gallery', '1.0', 'Mondrian Automaton gallery', 10 * 1024 * 1024);
+			db.transaction(function(tx) {
+				tx.executeSql('CREATE TABLE IF NOT EXISTS images (id unique, title TEXT, src TEXT, clicks INT)');
+			});
+		} else {
+			console.log("Web Databases not supported.");
+		}
+		
+		function hash_change() {
+			if (location.hash != hash) {
+				hash = location.hash;
+				$("header a").removeClass("current");
+				$("#main div").not(location.hash).fadeOut();
+				$(location.hash).fadeIn();
+				$(location.hash).trigger("generate");
+				$("a[href='"+hash+"']").addClass("current");
+			}
+		}
+		
+		location.hash = location.hash ? location.hash : "#content";
+		setInterval("hash_change()", 100);
     
         $(function() {
+			$("#gallery").bind("generate", function(e) {
+				$(this).children().remove();
+				db.transaction(function(tx) {
+					tx.executeSql('SELECT * FROM images', [], function(tx, results) {
+						if (results.rows && results.rows.length) {
+							$("#gallery").append("<ul/>");
+							for(i=results.rows.length-1; i>=0; i--) {
+								var li = '<li><span class="clicks">'+results.rows.item(i).clicks+' clicks</span>'
+										+'<h3>'+unescape(results.rows.item(i).title)+'</h3>'
+										+'<img src="'+unescape(results.rows.item(i).src)+'"></li>';
+								$("#gallery ul").append(li);
+							}
+						} else {
+							$("#gallery").append("<h2>Nothing in the gallery yet.</h2>");
+						}
+					});
+				});
+			});
+			
+			var hletters = $("h1 a").text().split("");
+			var colors = ["red", "yellow", "blue", "grey", "black"];
+			
+			function colorify_title() {
+				$("h1 a").text("");
+				for (i = 0; i<hletters.length; i++) {
+					var color = colors[Math.floor(Math.random()*colors.length)];
+					$("h1 a").append('<span class="'+color+'">'+hletters[i]+'</span>');
+				}
+			}
+			
+			colorify_title();
+			
 			// $("canvas").css("-webkit-transform", "rotate(45deg) scale(0.6)");
 			
 			// ranges for width height tweaking [320,480], [240,480], [480,480]
@@ -29,10 +86,10 @@
 			$(document).data("height", 480);
 			
 			$("canvas").each(function() {
-				
 				var i = Math.floor(Math.random()*options.length);
 				var selection = options[i];
 				var my_id = $(this).attr("id");
+				
 				$.get(selection+".pde", function(code) {
 					$("#"+my_id).data("selection", selection);
 					var canvas = document.getElementById(my_id);
@@ -43,30 +100,78 @@
 			
             $("#i").click(function() {
                 $("#info").toggle();
-                $("header").toggleClass("opaque");
+				$(this).toggleClass("current");
                 return false;
             });
             $("#x").click(function() {
                 $("#info").hide();
-                $("header").removeClass("opaque");
+				$("#i").removeClass("current");
                 return false;
             });
         
             $("canvas").click(function() {
-                //document.location = this.toDataURL();
+                clicks += 1;
                 return false;
             });
             
             $("#images a").click(function() {
-                var canvy = document.getElementById($(this).attr("href").slice(1));
-                $("#upload img").attr("src", canvy.toDataURL());
+                var source = document.getElementById($(this).attr("href").slice(1)).toDataURL();
+                $("#image_src").attr("src", source);
                 $("#upload").show();
                 return false;
             });
+
+			$("h1 a").click(colorify_title);
+
+			function close_upload() {
+				$("#image_name").val("").removeClass("error");
+				$("#errors").text("").hide();
+                $("#upload").hide();
+			}
             
             $("#cancel").click(function() {
-                $("#upload").hide();
+				close_upload();
             });
+
+			$("#upload form").submit(function() {
+				$("#image_name").removeClass("error");
+				$("#errors").text("").hide();
+				
+				var the_title = escape($("#image_name").val().replace(/^\s+|\s+$/g, ''));
+				var the_src = escape($("#image_src").attr("src"));
+				
+				if (the_title.length) {
+					if (the_title.length < 64) {
+						var index = 0;
+						db.transaction(function(tx) {
+							tx.executeSql('SELECT * FROM images', [], function(tx, results) {
+								if (results.rows && results.rows.length) {
+									index = results.rows.length;
+								}
+							});
+						});
+						
+						console.log(index);
+						
+						db.transaction(function(tx) {
+							tx.executeSql('INSERT INTO images (id, title, src, clicks) '
+										 +'values (?, ?, ?, ?)',
+										[index, the_title, the_src, clicks]);
+						});
+					
+						close_upload();
+						location.hash = "#gallery";
+					} else {
+						$("#errors").text("Title too long, please shorten.").show();
+						$("#image_name").addClass("error");
+					}
+				} else {
+					$("#errors").text("No title entered.").show();
+					$("#image_name").addClass("error");
+				}
+								
+				return false;
+			});
         });
     </script>
     
@@ -74,19 +179,20 @@
 </head>
 <body>
     <div id="upload">
-        <form action="/submit">
+        <form>
             <h2>Add to the Gallery</h2>
-            <input type="text" name="image_name" id="image_name" placeholder="Give it a name">
-            <img src="#">
+			<p id="errors"></p>
+            <input type="text" name="image_name" id="image_name" placeholder="Give it a title.">
+            <img id="image_src" src="#">
             <input type="submit" id="submit" value="Submit">
             <input type="button" id="cancel" value="Cancel">
         </form>
     </div>
     
     <header>
-        <h1><a href="/">Mondrian Automaton</a></h1>
+        <h1><a href="#content">Mondrian Automaton</a></h1>
         <a href="#info" id="i">Info</a>
-        <a href="gallery" id="gal">Gallery</a>
+        <a href="#gallery" id="gal">Gallery</a>
     </header>
     
     <details id="info">
@@ -111,30 +217,36 @@
         <a id="x" href="#">X</a>
     </details>
     
-    <div id="content">
-        <h2>Choose the image you prefer, and we&rsquo;ll hone in on your tastes.</h2>
+	<div id="main">
+	    <div id="content">
+	        <h2>Choose the image you prefer, and we&rsquo;ll hone in on your tastes.</h2>
             
-        <ol id="images">
-            <li>
-                <canvas id="c1"></canvas>
-                <a href="#c1">Add to gallery</a>
-            </li>
+	        <ol id="images">
+	            <li>
+	                <canvas id="c1"></canvas>
+	                <a href="#c1">Add to gallery</a>
+	            </li>
         
-            <li>
-                <canvas id="c2"></canvas>
-                <a href="#c2">Add to gallery</a>
-            </li>
+	            <li>
+	                <canvas id="c2"></canvas>
+	                <a href="#c2">Add to gallery</a>
+	            </li>
             
-            <li>
-                <canvas id="c3"></canvas>
-                <a href="#c3">Add to gallery</a>
-            </li>
+	            <li>
+	                <canvas id="c3"></canvas>
+	                <a href="#c3">Add to gallery</a>
+	            </li>
         
-            <li>
-                <canvas id="c4"></canvas>
-                <a href="#c4">Add to gallery</a>
-            </li>
-        </ol>
-    </div>
+	            <li>
+	                <canvas id="c4"></canvas>
+	                <a href="#c4">Add to gallery</a>
+	            </li>
+	        </ol>
+	    </div>
+
+		<div id="gallery">
+		
+		</div>
+	</div>
 </body>
 </html>
