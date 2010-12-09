@@ -73,7 +73,12 @@
 								for(i=results.rows.length-1; i>=0; i--) {
 									var li = '<li><h3>'+unescape(results.rows.item(i).title)
 											+'<span class="clicks">'+results.rows.item(i).clicks+' clicks</span></h3>'
-											+'<img src="'+unescape(results.rows.item(i).src)+'"';
+									if (results.rows.item(i).title.toLowerCase() == "piet" ||
+										results.rows.item(i).title.toLowerCase() == "mondrian") {
+										li += '<img src="piet.jpg"';
+									} else {
+										li += '<img src="'+unescape(results.rows.item(i).src)+'"';
+									}
 									if (results.rows.item(i).rotate == "true") {
 										li += ' class="rotate"';
 									}
@@ -198,6 +203,8 @@
             });
             
             $("#images a").click(function() {
+				$("#image_src").removeClass("rotate");
+				
                 var source = document.getElementById($(this).attr("href").slice(1)).toDataURL();
                 $("#image_src").attr("src", source);
 				if ($($(this).attr("href")).hasClass("rotate")) {

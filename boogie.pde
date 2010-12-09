@@ -10,8 +10,8 @@ colors.add(color(213, 174, 49)); // yellow
 color bkgd = color(202, 204, 201);
 color yellow = color(213, 174, 49);
 
-int complexity = int(random(1, 4));
-int thickness = int(random(1,4));
+var complexity = $(document).data("complexity");
+var thickness = $(document).data("thickness");
 
 void illus() {
     var w = $(document).data("width");

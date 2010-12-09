@@ -1,5 +1,5 @@
-int complexity = int(random(1, 4));
-int thickness = int(random(1,4));
+var complexity = $(document).data("complexity");
+var thickness = $(document).data("thickness");
 
 void illus()
 {

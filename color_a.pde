@@ -5,8 +5,8 @@ colors.add(color(96, 90, 126)); // purple
 
 color black = color(44, 26, 12);
 
-int complexity = int(random(1, 4));
-int thickness = int(random(1,4));
+var complexity = $(document).data("complexity");
+var thickness = $(document).data("thickness");
 
 void illus() {
     var w = $(document).data("width");

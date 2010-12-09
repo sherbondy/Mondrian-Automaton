@@ -12,8 +12,8 @@ colors.add(color(18, 13, 10)); // black
 colors.add(color(187, 189, 194)); // grey
 colors.add(color(255,255,255)); // white
 
-int complexity = int(random(1, 4));
-int thickness = int(random(1,4));
+var complexity = $(document).data("complexity");
+var thickness = $(document).data("thickness");
 
 void illus() {
     var w = $(document).data("width");
