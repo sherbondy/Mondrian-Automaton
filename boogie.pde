@@ -104,7 +104,7 @@ void illus() {
                     }
 					
 					// modifying max_s to change with the thickness the user prefers
-					max_s = int((complexity*max_s)/2);
+					max_s = int((thickness*max_s)/2);
 					
                     int num_squares = int(random(2,max_s));
                     int free_s = max_si - num_squares;
@@ -140,7 +140,7 @@ void illus() {
                     }
 
 					// modifying max_s to change with the thickness the user prefers
-					max_s = int((complexity*max_s)/2);
+					max_s = int((thickness*max_s)/2);
 					
                     int num_squares = int(random(2,max_s));
                     int free_s = max_si - num_squares;
