@@ -98,10 +98,10 @@ void illus() {
 					// this box in
                     int max_si = max_s;
                     
-                    //if (max_s > 6) {
+                    if (max_s > 10) {
                         // don't want ridiculously wide boxes
-                    //    max_s = int(max_s/2);
-                    //}
+                        max_s = int(max_s/2);
+                    }
 					
 					// modifying max_s to change with the thickness the user prefers
 					max_s = int((thickness*max_s)/2);
@@ -134,10 +134,10 @@ void illus() {
 					// and max_si refers to the total available white space
                     int max_si = max_s;
                     
-                    //if (max_s > 5) {
+                    if (max_s > 8) {
                         // don't want ridiculously wide boxes
-                    //    max_s = int(max_s/2);
-                    //}
+                        max_s = int(max_s/2);
+                    }
 
 					// modifying max_s to change with the thickness the user prefers
 					max_s = int((thickness*max_s)/2);
