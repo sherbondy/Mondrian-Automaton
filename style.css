@@ -224,8 +224,11 @@ canvas:active, #images li a:active,
 #images li, #gallery li {
 	width: 480px;
     float: left;
-    padding: 8px;
-    margin-bottom: 16px;
+    padding: 0 8px;
+}
+#images li div {
+	height: 480px;
+	padding: 32px 0 16px;
 }
 #images li a {
 	position: relative;
@@ -262,7 +265,7 @@ canvas:active, #images li a:active,
 }
 #upload img {
     display: block;
-    margin: 0 auto 16px;
+    margin: 32px auto;
 }
 #upload input {
 	font-family: Arvo, 'Helvetica Neue', Helvetica;

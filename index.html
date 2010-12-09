@@ -114,9 +114,7 @@
 				var the_style = style_clone.length ? style_clone.rand() : style_opts.rand();
 				var the_rotation = rotate_clone.length ? rotate_clone.rand() : rotate_opts.rand();
 				var the_dimensions = dimension_clone.length ? dimension_clone.rand() : dimension_opts.rand();
-	            
-	            console.log(the_rotation); 
-							
+	            							
 				$("canvas").each(function() {
 				    $(this).removeClass("rotate");
 				    
@@ -127,33 +125,29 @@
 					
 					if (opts == style_opts) {
 					    if (style_clone.length) {
-					        var j = style_clone.ri();
-				            the_style = style_clone(j);
-				            style_clone.remove(j);
+				            the_style = style_clone.rand();
+							style_clone.remove(jQuery.inArray(the_style, style_clone));
 				        } else {
 				            the_style = selection;
 				            opt_clone.remove(i);
 			            }
 				    } else if (opts == rotate_opts) {
 				        if (rotate_clone.length) {
-					        var j = rotate_clone.ri();
-				            the_rotation = rotate_clone(j);
-				            rotate_clone.remove(j);
+				            the_rotation = rotate_clone.rand();
+							rotate_clone.remove(jQuery.inArray(the_rotation, rotate_clone));
 				        } else {
 				            the_rotation = selection;
 				            opt_clone.remove(i);
 			            }
 			        } else if (opts == dimension_opts) {
-			            console.log("dimensions");
 			            if (dimension_clone.length) {
-					        var j = dimension_clone.ri();
-				            the_dimensions = dimension_clone(j);
-				            dimension_clone.remove(j);
+				            the_dimensions = dimension_clone.rand();
+							dimension_clone.remove(jQuery.inArray(the_dimensions, dimension_clone));
 				        } else {
 				            the_dimensions = selection;
 				            opt_clone.remove(i);
 			            }
-		            }
+					}
 				    
 				    $(this).data({"type": the_style, 
 				                  "rotation": the_rotation, 
@@ -162,20 +156,31 @@
 					if (the_rotation == true) {
 					    $(this).addClass("rotate");
 				    }
-	   				$(document).data("width", the_dimensions[0]);
-       				$(document).data("height", the_dimensions[1]);
-       				       				
+				
 					$.get(the_style+".pde", function(code) {
 						var canvas = document.getElementById(my_id);
+						
+						$(document).data("width", $("#"+my_id).data("dimensions")[0]);
+						$(document).data("height", $("#"+my_id).data("dimensions")[1]);
+
 						new Processing(canvas, code);
 					});
 				});
 			}
 			
 			// initial generation
-			var modified = options.rand();
-			generate_images(modified);
-			console.log(modified);
+			generate_images(style_opts);
+			
+			$("canvas").click(function() {
+                clicks += 1;
+				style_picks.push($(this).data("type"));
+				rotate_picks.push($(this).data("rotation"));
+				dimension_picks.push($(this).data("dimensions"));
+				
+				generate_images(options.rand());
+				
+                return false;
+            });
 			
             $("#i").click(function() {
                 $("#info").toggle();
@@ -185,11 +190,6 @@
             $("#x").click(function() {
                 $("#info").hide();
 				$("#i").removeClass("current");
-                return false;
-            });
-        
-            $("canvas").click(function() {
-                clicks += 1;
                 return false;
             });
             
@@ -307,22 +307,30 @@
             
 	        <ol id="images">
 	            <li>
-	                <canvas id="c1"></canvas>
+					<div>
+	                	<canvas id="c1"></canvas>
+					</div>
 	                <a href="#c1">Add to gallery</a>
 	            </li>
         
 	            <li>
-	                <canvas id="c2"></canvas>
+					<div>
+	                	<canvas id="c2"></canvas>
+					</div>
 	                <a href="#c2">Add to gallery</a>
 	            </li>
             
 	            <li>
-	                <canvas id="c3"></canvas>
+					<div>
+	                	<canvas id="c3"></canvas>
+					</div>
 	                <a href="#c3">Add to gallery</a>
 	            </li>
         
 	            <li>
-	                <canvas id="c4"></canvas>
+					<div>
+	                	<canvas id="c4"></canvas>
+					</div>
 	                <a href="#c4">Add to gallery</a>
 	            </li>
 	        </ol>
