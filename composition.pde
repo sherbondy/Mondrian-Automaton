@@ -12,6 +12,9 @@ colors.add(color(18, 13, 10)); // black
 colors.add(color(187, 189, 194)); // grey
 colors.add(color(255,255,255)); // white
 
+int complexity = int(random(1, 4));
+int thickness = int(random(1,4));
+
 void illus() {
     //var w = $(document).data("width");
     //var h = $(document).data("height");
@@ -29,15 +32,15 @@ void illus() {
     smooth();
 
     stroke(000);
-    int s_w = int(random(int(w/100),int(w/50)));
+    int s_w = int(random(int((thickness*w)/125),int((thickness*w)/75)));
     int adj = int(s_w/2);
     strokeWeight(s_w);
     
-    int min_w = int(w/12);
-    int max_w = int(w/2);
+    int min_w = int((complexity*w)/14);
+    int max_w = int((complexity*w)/6);
     
-    int min_h = int(h/12);
-    int max_h = int(h/2);
+    int min_h = int((complexity*h)/14);
+    int max_h = int((complexity*h)/6);
     
     //adding lines to v_array and h_array
     

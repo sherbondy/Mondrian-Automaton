@@ -10,6 +10,9 @@ colors.add(color(213, 174, 49)); // yellow
 color bkgd = color(202, 204, 201);
 color yellow = color(213, 174, 49);
 
+int complexity = int(random(1, 4));
+int thickness = int(random(1,4));
+
 void illus() {
     var w = $(document).data("width");
     var h = $(document).data("height");
@@ -25,8 +28,8 @@ void illus() {
     int s_w = int(w/48);
     strokeWeight(s_w);
     
-    int min_squares = 2;
-    int max_squares = 14;
+    int min_squares = int(4/complexity);
+    int max_squares = int(18/complexity);
     
     v_array.add(0);
     h_array.add(0);
@@ -60,7 +63,7 @@ void illus() {
             fill(colors.get(int(random(0,colors.size()))));
             rect(v_array.get(i)-s_w/2, square_pos-s_w/2, s_w, s_w);
             
-            square_pos += int(random(1,5))*s_w;
+            square_pos += int(random(2/complexity,8/complexity)*s_w);
         }
     }
     
@@ -71,7 +74,7 @@ void illus() {
             fill(colors.get(int(random(0,colors.size()))));
             rect(square_pos-s_w/2, h_array.get(i)-s_w/2, s_w, s_w);
             
-            square_pos += int(random(1,5))*s_w;
+            square_pos += int(random(2/complexity,8/complexity)*s_w);
         }
     }
     
@@ -88,13 +91,21 @@ void illus() {
                 // box is wider than it is tall, so we want to have a hotdog rect inside
                 
                 if (v_array.get(i+1)-v_array.get(i) > h_array.get(j+1)-h_array.get(j)) {
+					// max_s is the max size of the color square we will be placing
+					// in our blank white space
                     int max_s = int((v_array.get(i+1)-v_array.get(i))/s_w);
+					// max_si is the size of the free white space that we are putting
+					// this box in
                     int max_si = max_s;
                     
                     if (max_s > 6) {
                         // don't want ridiculously wide boxes
                         max_s = int(max_s/2);
                     }
+					
+					// modifying max_s to change with the thickness the user prefers
+					max_s = int((complexity*max_s)/2);
+					
                     int num_squares = int(random(2,max_s));
                     int free_s = max_si - num_squares;
                     int height = h_array.get(j+1)-h_array.get(j)-s_w;
@@ -118,13 +129,19 @@ void illus() {
                 } else {
                     // box is taller than it is wide, so we want a hamburger rect inside
                     
+					// again, max_s refers to the size of the color rectangle we are creating
                     int max_s = int((h_array.get(i+1)-h_array.get(i))/s_w);
+					// and max_si refers to the total available white space
                     int max_si = max_s;
                     
                     if (max_s > 5) {
                         // don't want ridiculously wide boxes
                         max_s = int(max_s/2);
                     }
+
+					// modifying max_s to change with the thickness the user prefers
+					max_s = int((complexity*max_s)/2);
+					
                     int num_squares = int(random(2,max_s));
                     int free_s = max_si - num_squares;
                     int width = v_array.get(i+1)-v_array.get(i)-s_w;
