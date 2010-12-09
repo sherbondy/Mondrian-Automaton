@@ -13,15 +13,14 @@ colors.add(color(187, 189, 194)); // grey
 colors.add(color(255,255,255)); // white
 
 void illus() {
-    var w = $(document).data("width");
-    var h = $(document).data("height");
-    size(w, h);
+    //var w = $(document).data("width");
+    //var h = $(document).data("height");
+    var w = 480;
+    var h = 480;
+    size(480, 480);
     
     v_array.clear();
     h_array.clear();
-    
-    v_array.add(w);
-    h_array.add(h);
     
     v_array.add(0);
     h_array.add(0);
@@ -31,7 +30,7 @@ void illus() {
 
     stroke(000);
     int s_w = int(random(int(w/100),int(w/50)));
-    int adj = ceil(s_w/2);
+    int adj = int(s_w/2);
     strokeWeight(s_w);
     
     int min_w = int(w/12);
@@ -40,58 +39,141 @@ void illus() {
     int min_h = int(h/12);
     int max_h = int(h/2);
     
-    for (int i = 1; v_array.get(i) < w; i++) {
-        int x_pos = v_array.get(i) + int(random(min_w,max_w));
+    //adding lines to v_array and h_array
+    
+    //first we add a line that can be close to the left side b/c it is possible for this to happen on the right
+    int x_pos = int(random(s_w, max_w));
+    v_array.add(x_pos);
+    line(x_pos, 0, x_pos, h);
+    while (true) {
+      x_pos = x_pos + int(random(min_w, max_w));
+      if (x_pos < w) {
         v_array.add(x_pos);
-        
-        line(x_pos,0,x_pos,h);
+      
+        line(x_pos, 0, x_pos, h);
+      }
+      else {
+        break;
+      }
     }
     
-    for (int i = 1; h_array.get(i) < h; i++) {
-        int y_pos = h_array.get(i) + int(random(min_h,max_h));
+    //we do the same thing here b/c lines can be close to the bottom
+    int y_pos = int(random(s_w, max_w));
+    h_array.add(y_pos);
+    line(0, y_pos, w, y_pos);
+    while (true) {
+      y_pos = y_pos + int(random(min_h, max_h));
+      if (y_pos < h) {
         h_array.add(y_pos);
-        
-        line(0,y_pos,w,y_pos);
+      
+        line(0, y_pos, w, y_pos);
+      }
+      else {
+        break;
+      }
     }
     
-    
+    // adding the right-most and bottom-most bounds
+    v_array.add(w);
+    h_array.add(h);
+
+
+    //creating an arraylist to store the {x1,y1,x2,y2} coords of each rectangle
+    ArrayList spaces = new ArrayList();
+    // finding all the locations for rectangles
+    for (int y = 0; y < (h_array.size() - 1); y++){ // for every line in h_array except the last
+      for (int x = 0; x < (v_array.size() - 1); x++) { // for ever line in v_array except the last
+        int[] dimensions = {v_array.get(x), h_array.get(y), v_array.get(x + 1), h_array.get(y + 1)};
+        spaces.add(dimensions);
+      }
+    }
     
     int max_squares = v_array.size()+h_array.size();
     int num_squares = int(random(3, max_squares));
-    
-    for (int i=0; i < num_squares; i++) {
-        int width = max_w;
-        int height = max_h;
-        
-        while (width >= max_w || height >= max_h) {
-            int li = int(random(0,v_array.size()));
-            int ti = int(random(0,h_array.size()));
-        
-            int left = v_array.get(li);
-            int top = h_array.get(ti);
-        
-            v_array.remove(li);
-            h_array.remove(ti);
-        
-            int right = v_array.get(int(random(0,v_array.size())));
-            int bottom = h_array.get(int(random(0,h_array.size())));
-            
-            v_array.add(left);
-            h_array.add(top);
-    
-            int width = abs(left-right);
-            int height = abs(top-bottom);
-                
-            if (width < max_w && height < max_h) {
-                noStroke();
-                fill(colors.get(int(random(0,colors.size()))));
-                int lefty = min(left,right) == 0 ? 0 : min(left,right)+adj-1;
-                int toppy = min(top,bottom) == 0 ? 0 : min(top,bottom)+adj-1;
-                int w_shift = lefty == 0 ? adj : s_w;
-                int h_shift = toppy == 0 ? adj : s_w;
-                rect(lefty, toppy, width-w_shift+1, height-h_shift+1);
-            }
+    int painted_squares = 0;
+    ArrayList occupied = new ArrayList();
+    occupied.add(-1);
+    boolean moved_left = false;
+    boolean moved_right = false;
+
+    while(painted_squares < num_squares) {
+      int index = -1;
+      while(occupied.contains(index)) {
+        index = int(random(0, spaces.size()));
+      }
+      int[] dimensions = spaces.get(index);
+      occupied.add(index);
+      painted_squares = painted_squares + 1;
+      //moving right
+      if(painted_squares < num_squares && !((index + 1) % (v_array.size() - 1) == 0) && !(occupied.contains(index + 1)) ) {
+        if (int(random(0, 2))==1) {
+          dimensions[2] = spaces.get(index + 1)[2];
+          painted_squares = painted_squares + 1;
+          occupied.add(index + 1);
+          moved_right = true;
         }
+      }
+      //moving left
+      if(painted_squares < num_squares && !((index) % (v_array.size() - 1) == 0) && !(occupied.contains(index - 1)) ) {
+        if (int(random(0, 2))==1) {
+          dimensions[0] = spaces.get(index - 1)[0];
+          painted_squares = painted_squares + 1;
+          occupied.add(index - 1);
+          moved_left = true;
+        }
+      }
+      //moving down
+      if(painted_squares < num_squares && !(occupied.contains(index + v_array.size() - 1)) && (index + v_array.size() - 1) < spaces.size()) {
+        if(!(moved_right && occupied.contains(index+v_array.size()))
+          && !(moved_left && occupied.contains(index + v_array.size() - 2)) && int(random(0, 2)) == 1) {
+          dimensions[3] = spaces.get(index + v_array.size() - 1)[3];
+          painted_squares = painted_squares + 1;
+          occupied.add(index + v_array.size() - 1);
+          if(moved_right) {
+            occupied.add(index+v_array.size());
+            painted_squares = painted_squares + 1;
+          }
+          if(moved_left) {
+            occupied.add(index+v_array.size()-2);
+            painted_squares = painted_squares + 1;
+          }
+        }
+      }
+      //moving up
+      if(painted_squares < num_squares && !(occupied.contains(index - v_array.size() + 1)) && (index - v_array.size() + 1) >= 0) {
+        if(!(moved_right && occupied.contains(index - v_array.size() + 2))
+          && !(moved_left && occupied.contains(index - v_array.size())) && int(random(0, 2)) == 1) {
+          dimensions[1] = spaces.get(index - v_array.size() + 1)[1];
+          painted_squares = painted_squares + 1;
+          occupied.add(index - v_array.size() + 1);
+          if(moved_right) {
+            occupied.add(index - v_array.size() + 2);
+            painted_squares = painted_squares + 1;
+          }
+          if(moved_left) {
+            occupied.add(index - v_array.size());
+            painted_squares = painted_squares + 1;
+          }
+        }
+      }
+      
+      
+      // adjusting the dimensions to compensate for the thickness of the lines
+      if(dimensions[0] != 0) {
+        dimensions[0] = dimensions[0] + adj;
+      }
+      if(dimensions[1] != 0) {
+        dimensions[1] = dimensions[1] + adj;
+      }
+      if(dimensions[2] != w) {
+        dimensions[2] = dimensions[2] - adj;
+      }
+      if(dimensions[3] != h) {
+        dimensions[3] = dimensions[3] - adj;
+      }
+      noStroke();
+      fill(colors.get(int(random(0, colors.size()))));
+      rect(dimensions[0], dimensions[1], (dimensions[2]-dimensions[0]), (dimensions[3]-dimensions[1]));
     }
 }
 
