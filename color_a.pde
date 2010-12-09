@@ -5,6 +5,9 @@ colors.add(color(96, 90, 126)); // purple
 
 color black = color(44, 26, 12);
 
+int complexity = int(random(1, 4));
+int thickness = int(random(1,4));
+
 void illus() {
     var w = $(document).data("width");
     var h = $(document).data("height");
@@ -13,19 +16,19 @@ void illus() {
     background(245,245,245);
     smooth();
     
-    int min_w = int(w/12);
-    int max_w = int(w/6);
+    int min_w = int((thickness*w)/16);
+    int max_w = int((thickness*w)/8);
     
     int s_w = int(w/50);
-    int min_s_h = int(w/30);
-    int max_s_h = int(w/15);
+    int min_s_h = int((thickness*w)/40);
+    int max_s_h = int((thickness*w)/20);
     
     int[] big_rects = new int[3];
-    big_rects[0] = int(random(6, 10));
-    big_rects[1] = int(random(6, 10));
-    big_rects[2] = int(random(6, 10));
+    big_rects[0] = int(random(complexity*4, complexity*7));
+    big_rects[1] = int(random(complexity*4, complexity*7));
+    big_rects[2] = int(random(complexity*4, complexity*7));
     
-    int small_rects = int(random(20, 30));
+    int small_rects = int(random(complexity*10, complexity*20));
     
     for (int i=0; i<big_rects.length; i++) {
         for (int j=0; j < big_rects[i]; j++) {

@@ -1,3 +1,6 @@
+int complexity = int(random(1, 4));
+int thickness = int(random(1,4));
+
 void illus()
 {
 
@@ -7,26 +10,37 @@ void illus()
   for (int i = 0; i < int(random(0, 4)); i++) {
     colors.add(color(175,25,25));
   }
-    // add blues
+  // add blues
   for (int i = 0; i < int(random(0, 4)); i++) {
     colors.add(color(28,24,160));
   }
-    // add yellows
+  // add yellows
   for (int i = 0; i < int(random(0, 4)); i++) {
     colors.add(color(240,204,22));
   }
 
-  var screen_width = $(document).data("width");
-  var screen_height = $(document).data("height");
-  int stroke_weight = int(random(0, 20));  
-  ArrayList line_locations = new ArrayList();
-  int horizontal_lines = 20;
-  int vertical_lines = 20;
-  int background_shade = color(237, 235, 210);
-  // the min and max spacing includes spacing between the walls.
-  // we may want to provide two more variables to control this particular case later
-  int min_spacing = 5;
-  int max_spacing = 100;
+  	var screen_width = $(document).data("width");
+  	var screen_height = $(document).data("height");
+  	int stroke_weight = 0;
+	if(thickness == 1){
+		stroke_weight = int(random(1, 8));
+	}
+	else if(thickness == 2) {
+		stroke_weight = int(random(8, 16));
+	}
+	else {
+		stroke_weight = int(random(17, 28));
+	}
+  	ArrayList line_locations = new ArrayList();
+	int horizontal_lines = 20;
+  	int vertical_lines = 20;
+	if(complexity == 1) {
+		horizontal_lines = 4;
+		vertical_lines = 4;
+	}
+  	int background_shade = color(237, 235, 210);
+  	int min_spacing = int(6/complexity);
+  	int max_spacing = int(150/complexity);
 
   // initiate the canvas
   size(screen_width, screen_height);
