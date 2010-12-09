@@ -32,11 +32,9 @@
 		var style_opts = ["boogie","color_a","composition", "new_york_creater"];
 		var rotate_opts = [true, true, false, false];
 		var dimension_opts = [[480,480], [480,240],[240,480],[480,320],[320,480]];
-		var options = [style_opts, rotate_opts, dimension_opts];
-		
-		var style_picks = [];
-		var rotate_picks = [];
-		var dimension_picks = [];
+		var thickness_opts = [1,1,2,2,3,3];
+		var complexity_opts = [1,1,2,2,3,3];
+		var options = [style_opts, rotate_opts, dimension_opts, thickness_opts, complexity_opts];
 		
 		var clicks = 0;
 		var db_enabled = true; // toggling is helpful when using cssedit
@@ -53,7 +51,7 @@
 			if (location.hash != hash) {
 				hash = location.hash;
 				$("header a").removeClass("current");
-				$("#main div").not(location.hash).fadeOut();
+				$("#main > div").not(location.hash).fadeOut();
 				$(location.hash).fadeIn();
 				$(location.hash).trigger("generate");
 				$("a[href='"+hash+"']").addClass("current");
@@ -73,8 +71,8 @@
 							if (results.rows && results.rows.length) {
 								$("#gallery").append("<ul/>");
 								for(i=results.rows.length-1; i>=0; i--) {
-									var li = '<li><span class="clicks">'+results.rows.item(i).clicks+' clicks</span>'
-											+'<h3>'+unescape(results.rows.item(i).title)+'</h3>'
+									var li = '<li><h3>'+unescape(results.rows.item(i).title)
+											+'<span class="clicks">'+results.rows.item(i).clicks+' clicks</span></h3>'
 											+'<img src="'+unescape(results.rows.item(i).src)+'"';
 									if (results.rows.item(i).rotate == "true") {
 										li += ' class="rotate"';
@@ -104,54 +102,45 @@
 			
 			colorify_title();
 			
-			function generate_images(opts) {
+			function generate_images() {
 
-				var opt_clone = opts.slice(0);
-				var style_clone = style_picks.slice(0);
-				var rotate_clone = rotate_picks.slice(0);
-				var dimension_clone = dimension_picks.slice(0);
+				var style_clone = style_opts.slice(0);
+				var rotate_clone = rotate_opts.slice(0);
+				var dimension_clone = dimension_opts.slice(0);
+				var thickness_clone = thickness_opts.slice(0);
+				var complexity_clone = complexity_opts.slice(0);
 				
-				var the_style = style_clone.length ? style_clone.rand() : style_opts.rand();
-				var the_rotation = rotate_clone.length ? rotate_clone.rand() : rotate_opts.rand();
-				var the_dimensions = dimension_clone.length ? dimension_clone.rand() : dimension_opts.rand();
+				var the_style = style_clone.rand();
+				var the_rotation = rotate_clone.rand();
+				var the_dimensions = dimension_clone.rand();
+				var the_thickness = thickness_clone.rand();
+				var the_complexity = complexity_clone.rand();
 	            							
 				$("canvas").each(function() {
 				    $(this).removeClass("rotate");
 				    
 				    var my_id = $(this).attr("id");
 					
-					var i = opt_clone.ri();
-					var selection = opt_clone[i];
+					the_style = style_clone.rand();
+					style_clone.remove(jQuery.inArray(the_style, style_clone));
+				    
+					the_rotation = rotate_clone.rand();
+					rotate_clone.remove(jQuery.inArray(the_rotation, rotate_clone));
+	
+			        the_dimensions = dimension_clone.rand();
+					dimension_clone.remove(jQuery.inArray(the_dimensions, dimension_clone));
+				    
+					the_thickness = thickness_clone.rand();
+					thickness_clone.remove(jQuery.inArray(the_thickness, thickness_clone));
 					
-					if (opts == style_opts) {
-					    if (style_clone.length) {
-				            the_style = style_clone.rand();
-							style_clone.remove(jQuery.inArray(the_style, style_clone));
-				        } else {
-				            the_style = selection;
-				            opt_clone.remove(i);
-			            }
-				    } else if (opts == rotate_opts) {
-				        if (rotate_clone.length) {
-				            the_rotation = rotate_clone.rand();
-							rotate_clone.remove(jQuery.inArray(the_rotation, rotate_clone));
-				        } else {
-				            the_rotation = selection;
-				            opt_clone.remove(i);
-			            }
-			        } else if (opts == dimension_opts) {
-			            if (dimension_clone.length) {
-				            the_dimensions = dimension_clone.rand();
-							dimension_clone.remove(jQuery.inArray(the_dimensions, dimension_clone));
-				        } else {
-				            the_dimensions = selection;
-				            opt_clone.remove(i);
-			            }
-					}
+					the_complexity = complexity_clone.rand();
+					complexity_clone.remove(jQuery.inArray(the_complexity, complexity_clone));
 				    
 				    $(this).data({"type": the_style, 
 				                  "rotation": the_rotation, 
-				                  "dimensions": the_dimensions});
+				                  "dimensions": the_dimensions,
+								  "thickness": the_thickness,
+								  "complexity": the_complexity});
 					
 					if (the_rotation == true) {
 					    $(this).addClass("rotate");
@@ -162,6 +151,8 @@
 						
 						$(document).data("width", $("#"+my_id).data("dimensions")[0]);
 						$(document).data("height", $("#"+my_id).data("dimensions")[1]);
+						$(document).data("thickness", $("#"+my_id).data("thickness"));
+						$(document).data("complexity", $("#"+my_id).data("complexity"));
 
 						new Processing(canvas, code);
 					});
@@ -169,15 +160,28 @@
 			}
 			
 			// initial generation
-			generate_images(style_opts);
+			generate_images();
 			
 			$("canvas").click(function() {
                 clicks += 1;
-				style_picks.push($(this).data("type"));
-				rotate_picks.push($(this).data("rotation"));
-				dimension_picks.push($(this).data("dimensions"));
+
+				style_opts.push($(this).data("type"));
+				rotate_opts.push($(this).data("rotation"));
+				dimension_opts.push($(this).data("dimensions"));
+				complexity_opts.push($(this).data("complexity"));
+				thickness_opts.push($(this).data("thickness"));
 				
-				generate_images(options.rand());
+				for (i in options) {
+					if (options[i].length > 20) {
+						/* we get rid of the 6th so as not to 
+							remove the prepopulated values.
+							This way, there's always a SLIGHT
+							chance of getting a different style painting. */
+						options[i].remove(6);
+					}
+				}
+				
+				generate_images();
 				
                 return false;
             });

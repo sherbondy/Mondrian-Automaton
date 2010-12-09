@@ -226,6 +226,7 @@ canvas:active, #images li a:active,
     float: left;
     padding: 0 8px;
 }
+
 #images li div {
 	height: 480px;
 	padding: 32px 0 16px;
@@ -245,6 +246,24 @@ canvas:active, #images li a:active,
     width: 240px;
     margin: 16px auto;
 }
+
+#gallery li {
+	padding-bottom: 64px;
+	height: 560px;
+}
+#gallery h3 {
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 2;
+	margin-bottom: 32px;
+}
+#gallery .clicks {
+	margin-left: 16px;
+	font-size: 18px;
+	margin-top: 16px;
+	color: #00a5bf;
+}
+
 #upload {
 	z-index: 1;
 	position: fixed;
@@ -325,18 +344,6 @@ canvas:active, #images li a:active,
 	padding: 8px 16px;
 	color: #fff;
 	margin-bottom: -2px;
-}
-
-#gallery h3 {
-	font-size: 24px;
-	font-weight: bold;
-	line-height: 2;
-}
-#gallery .clicks {
-	float: right;
-	font-size: 18px;
-	margin-top: 16px;
-	color: #00a5bf;
 }
 
 .rotate {

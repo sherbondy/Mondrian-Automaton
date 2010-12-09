@@ -13,11 +13,9 @@ colors.add(color(187, 189, 194)); // grey
 colors.add(color(255,255,255)); // white
 
 void illus() {
-    //var w = $(document).data("width");
-    //var h = $(document).data("height");
-    var w = 480;
-    var h = 480;
-    size(480, 480);
+    var w = $(document).data("width");
+    var h = $(document).data("height");
+    size(w, h);
     
     v_array.clear();
     h_array.clear();
