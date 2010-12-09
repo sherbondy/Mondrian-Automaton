@@ -19,11 +19,24 @@
 		  return this.push.apply(this, rest);
 		};
 		
+		// returns random index within the array
+		Array.prototype.ri = function() {
+		    return Math.floor(Math.random()*this.length);
+	    };
+	    // returns random item in the array
+	    Array.prototype.rand = function() {
+		    return this[Math.floor(Math.random()*this.length)];
+	    };
+		
 		var hash = "";
-		var style_options = ["boogie","color_a","composition", "new_york_creater"];
-		var rotate_options = [true, true, false, false];
-		var dimension_options = [[480,480], [480,240],[240,480],[480,320],[320,480]];
-		var options = [style_options, rotate_options, dimension_options];
+		var style_opts = ["boogie","color_a","composition", "new_york_creater"];
+		var rotate_opts = [true, true, false, false];
+		var dimension_opts = [[480,480], [480,240],[240,480],[480,320],[320,480]];
+		var options = [style_opts, rotate_opts, dimension_opts];
+		
+		var style_picks = [];
+		var rotate_picks = [];
+		var dimension_picks = [];
 		
 		var clicks = 0;
 		var db_enabled = true; // toggling is helpful when using cssedit
@@ -91,33 +104,78 @@
 			
 			colorify_title();
 			
-			function generate_images(options) {
-				// ranges for width height tweaking [320,480], [240,480], [480,480]
-				// arbitrarily set these, find out which array we're talking about
-				// if options == style_options, etc. go down the line.
-				// for the rest, pick a random, but make it constant across
-				$(document).data("width", 480);
-				$(document).data("height", 480);
-			
-				var opt_clone = options.slice(0);
-			
-				$("canvas").each(function() {
-					var i = Math.floor(Math.random()*opt_clone.length);
-					var selection = opt_clone[i];
-					var my_id = $(this).attr("id");
+			function generate_images(opts) {
+
+				var opt_clone = opts.slice(0);
+				var style_clone = style_picks.slice(0);
+				var rotate_clone = rotate_picks.slice(0);
+				var dimension_clone = dimension_picks.slice(0);
 				
-					$.get(selection+".pde", function(code) {
-						$("#"+my_id).data("selection", selection);
+				var the_style = style_clone.length ? style_clone.rand() : style_opts.rand();
+				var the_rotation = rotate_clone.length ? rotate_clone.rand() : rotate_opts.rand();
+				var the_dimensions = dimension_clone.length ? dimension_clone.rand() : dimension_opts.rand();
+	            
+	            console.log(the_rotation); 
+							
+				$("canvas").each(function() {
+				    $(this).removeClass("rotate");
+				    
+				    var my_id = $(this).attr("id");
+					
+					var i = opt_clone.ri();
+					var selection = opt_clone[i];
+					
+					if (opts == style_opts) {
+					    if (style_clone.length) {
+					        var j = style_clone.ri();
+				            the_style = style_clone(j);
+				            style_clone.remove(j);
+				        } else {
+				            the_style = selection;
+				            opt_clone.remove(i);
+			            }
+				    } else if (opts == rotate_opts) {
+				        if (rotate_clone.length) {
+					        var j = rotate_clone.ri();
+				            the_rotation = rotate_clone(j);
+				            rotate_clone.remove(j);
+				        } else {
+				            the_rotation = selection;
+				            opt_clone.remove(i);
+			            }
+			        } else if (opts == dimension_opts) {
+			            console.log("dimensions");
+			            if (dimension_clone.length) {
+					        var j = dimension_clone.ri();
+				            the_dimensions = dimension_clone(j);
+				            dimension_clone.remove(j);
+				        } else {
+				            the_dimensions = selection;
+				            opt_clone.remove(i);
+			            }
+		            }
+				    
+				    $(this).data({"type": the_style, 
+				                  "rotation": the_rotation, 
+				                  "dimensions": the_dimensions});
+					
+					if (the_rotation == true) {
+					    $(this).addClass("rotate");
+				    }
+	   				$(document).data("width", the_dimensions[0]);
+       				$(document).data("height", the_dimensions[1]);
+       				       				
+					$.get(the_style+".pde", function(code) {
 						var canvas = document.getElementById(my_id);
 						new Processing(canvas, code);
 					});
-					$(this).data("type", selection);
-					opt_clone.remove(i);
 				});
 			}
 			
 			// initial generation
-			generate_images(style_options);
+			var modified = options.rand();
+			generate_images(modified);
+			console.log(modified);
 			
             $("#i").click(function() {
                 $("#info").toggle();
