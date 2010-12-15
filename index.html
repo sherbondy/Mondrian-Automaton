@@ -4,14 +4,14 @@
 	<meta charset="utf-8">
 	<link href="http://fonts.googleapis.com/css?family=Arvo&subset=latin" 
 	    rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="style.css" type="text/css">
 	<link rel="icon" type="img/png" href="favicon.png">
-	
+	<link rel="stylesheet" type="text/css" href="style.css" type="text/css">
+		
 	<script src="processing-1.0.0.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" 
         type="text/javascript"></script>
     
-    <script type="text/javascript">
+    <script type="text/javascript">		
 		// Array Remove - By John Resig (MIT Licensed)
 		Array.prototype.remove = function(from, to) {
 		  var rest = this.slice((to || from) + 1 || this.length);
@@ -51,10 +51,11 @@
 			if (location.hash != hash) {
 				hash = location.hash;
 				$("header a").removeClass("current");
-				$("#main > div").not(location.hash).fadeOut();
-				$(location.hash).fadeIn();
-				$(location.hash).trigger("generate");
-				$("a[href='"+hash+"']").addClass("current");
+				$("#main > div").not(location.hash).fadeOut(function() {
+					$(location.hash).fadeIn();
+					$(location.hash).trigger("generate");
+					$("a[href='"+hash+"']").addClass("current");
+				});
 			}
 		}
 		
@@ -122,7 +123,7 @@
 				var the_complexity = complexity_clone.rand();
 	            							
 				$("canvas").each(function() {
-				    $(this).removeClass("rotate");
+				    $(this).removeClass();
 				    
 				    var my_id = $(this).attr("id");
 					
@@ -150,6 +151,7 @@
 					if (the_rotation == true) {
 					    $(this).addClass("rotate");
 				    }
+					$(this).addClass("_"+the_dimensions[0]+"x"+the_dimensions[1]);
 				
 					$.get(the_style+".pde", function(code) {
 						var canvas = document.getElementById(my_id);
@@ -203,7 +205,8 @@
             });
             
             $("#images a").click(function() {
-				$("#image_src").removeClass("rotate");
+				$(this).hide();
+				$("#image_src").removeClass();
 				
                 var source = document.getElementById($(this).attr("href").slice(1)).toDataURL();
                 $("#image_src").attr("src", source);
@@ -211,6 +214,7 @@
 					$("#image_src").addClass("rotate");
 				}
                 $("#upload").show();
+
                 return false;
             });
 
@@ -220,6 +224,7 @@
 				$("#image_name").val("").removeClass("error");
 				$("#errors").text("").hide();
                 $("#upload").hide();
+				$("#images a").show();
 			}
             
             $("#cancel").click(function() {
@@ -314,35 +319,27 @@
 	<div id="main">
 	    <div id="content">
 	        <h2>Choose the image you prefer, and we&rsquo;ll hone in on your tastes.</h2>
-			<h2>If you love one, add it to <a href="#gallery">the Gallery</a>.</h2>
+			<h2>If you love one, add it to <a href="#gallery">your Gallery</a>.</h2>
             
 	        <ol id="images">
 	            <li>
-					<div>
-	                	<canvas id="c1"></canvas>
-					</div>
-	                <a href="#c1">Add to gallery</a>
+					<a href="#c1">Add to gallery</a>
+	                <canvas id="c1"></canvas>
 	            </li>
         
 	            <li>
-					<div>
-	                	<canvas id="c2"></canvas>
-					</div>
 	                <a href="#c2">Add to gallery</a>
+	                <canvas id="c2"></canvas>
 	            </li>
             
 	            <li>
-					<div>
-	                	<canvas id="c3"></canvas>
-					</div>
 	                <a href="#c3">Add to gallery</a>
+	                <canvas id="c3"></canvas>
 	            </li>
         
 	            <li>
-					<div>
-	                	<canvas id="c4"></canvas>
-					</div>
 	                <a href="#c4">Add to gallery</a>
+	                <canvas id="c4"></canvas>
 	            </li>
 	        </ol>
 	    </div>
